@@ -25,9 +25,13 @@
     "mongodb": "^6.8.0",
     "mongoose": "^8.4.0",
     "nanoid": "^5.0.7",
+    "qrcode": "^1.5.3",
     "redis": "^4.6.15",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
     "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0"
   }
 }

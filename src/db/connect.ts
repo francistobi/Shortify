@@ -2,8 +2,7 @@ import mongoose, { ConnectOptions } from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-const url: string =
-  "mongodb+srv://frobigwe305:ebukaobigwe360@scissors.onjozd1.mongodb.net/?retryWrites=true&w=majority&appName=SCISSORS";
+const url= "mongodb+srv://frobigwe305:ebukaobigwe360@scissors.onjozd1.mongodb.net/?retryWrites=true&w=majority&appName=SCISSORS"
 
 export const connectDB = async (): Promise<void> => {
   try {
