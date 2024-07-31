@@ -1,4 +1,4 @@
-import {Express,Request,Response}from "express";
+import express from "express";
 import {
   createShortUrl,
   handleRedirect,
@@ -9,13 +9,11 @@ import validateResource from "../middleware/validate.js";
 import destinationSchema from "../schemas/createshorturl.schema.js"
 
 
-export function routes (app: Express) {
-    
-  app.post("/api/url", validateResource(destinationSchema), createShortUrl);
+const router = express.Router();
 
+router.post("/url", validateResource(destinationSchema), createShortUrl);
+router.get("/:shortId", handleRedirect);
+router.get("/analytics", getAnalytics);
+router.get("/qr/:shortId", generateQRCode);
 
-  app.get("/:shortId", handleRedirect)
-  app.get("/api/analytics", getAnalytics);
-  app.get("/qr/:shortId", generateQRCode);
-  
-}
+export default router;

@@ -1,17 +1,26 @@
 import { Request, Response } from "express";
+import validator from "validator";
 import shortUrl from "../models/shorturl.model.js";
 import analytics from "../models/analytics.model.js";
 
 export async function createShortUrl(req:Request,res:Response){
- const {destination} = req.body
- const newUrl = await shortUrl.create({ destination }
- );
+ const { destination, customSlug } = req.body;
 
+ if (customSlug) {
+  const existingUrl = await shortUrl.findOne({ customSlug });
+  if (existingUrl) {
+    return res.status(400).json({ message: "Custom slug is already in use." });
+  }
+ }
+   if (!validator.isURL(destination)) {
+     return res.status(400).json({ error: "Invalid URL" });
+   }
+ const newUrl = await shortUrl.create({ destination, customSlug });
  res.send(newUrl)
 }
-
 export async function handleRedirect(req: Request, res: Response){
  const {shortId} =req.params
+ const { customSlug } = req.query
   try {
     const short = await shortUrl.findOne({ shortId }).lean();
 
@@ -20,18 +29,22 @@ export async function handleRedirect(req: Request, res: Response){
     }
     analytics.create({
       shortUrl: short._id,
+      customSlug: customSlug,
     });
-     console.log(`Redirecting to: ${short.destination}`);
-    res.redirect(short.destination);
+       const destination =
+         typeof customSlug === "string" ? customSlug : short.destination;
+     console.log(`Redirecting to: ${destination}`);
+
+    res.redirect(destination);
   } catch (error) {
     console.error("Error handling redirect:", error);
     res.sendStatus(500); 
   }
-
 }
+
 
 export async function getAnalytics(req: Request, res: Response){
   const allAnalytics = await analytics.find({}).lean();
-  
+
   return res.send(allAnalytics);
 }

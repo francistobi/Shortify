@@ -3,22 +3,24 @@ import { customAlphabet } from "nanoid";
 
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz123456789", 8)
 
-export interface ShortUrl extends Document{
-    shortId : string,
-    destination: string
+export interface ShortUrl extends Document {
+  shortId: string;
+  destination: string;
+  customSlug?: string;
 }
 
 const schema = new mongoose.Schema({
   shortId: {
-    type : String,
-    unique: true,
-    required:true,
-    default:() => nanoid()
-  },
-  destination:{
     type: String,
-    required: true
-  }
+    unique: true,
+    required: true,
+    default: () => nanoid(),
+  },
+  destination: {
+    type: String,
+    required: true,
+  },
+  customSlug: { type: String, unique: true, sparse: true }
 });
 
 const shortUrl = mongoose.model<ShortUrl>("shortUrl", schema);

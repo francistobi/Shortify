@@ -4,7 +4,6 @@ import QRCode from "qrcode";
 
 export async function generateQRCode(req: Request, res: Response) {
   const { shortId } = req.params;
-
   try {
     const short = await shortUrl.findOne({ shortId });
 

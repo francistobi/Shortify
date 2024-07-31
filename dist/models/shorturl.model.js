@@ -6,12 +6,13 @@ const schema = new mongoose.Schema({
         type: String,
         unique: true,
         required: true,
-        default: () => nanoid()
+        default: () => nanoid(),
     },
     destination: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
+    customSlug: { type: String, unique: true, sparse: true }
 });
 const shortUrl = mongoose.model("shortUrl", schema);
 export default shortUrl;
