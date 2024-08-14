@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-dotenv.config();
-const url = "mongodb+srv://frobigwe305:ebukaobigwe360@scissors.onjozd1.mongodb.net/?retryWrites=true&w=majority&appName=SCISSORS";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "../env") });
+const url = process.env.MONGO_URI;
 export const connectDB = async () => {
     try {
         await mongoose.connect(url);

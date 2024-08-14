@@ -12,7 +12,9 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    customSlug: { type: String, unique: true, sparse: true }
+    customSlug: { type: String, unique: true, sparse: true },
+    clicks: { type: Number, default: 0 },
+    user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
 });
 const shortUrl = mongoose.model("shortUrl", schema);
 export default shortUrl;

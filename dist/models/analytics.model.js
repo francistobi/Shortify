@@ -5,6 +5,7 @@ const schema = new mongoose.Schema({
         ref: "shortUrl",
         required: true,
     },
+    ipAddress: { type: String },
 }, { timestamps: true });
 const analytics = mongoose.model("analytics", schema);
 export default analytics;
