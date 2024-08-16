@@ -71,4 +71,29 @@ export async function getLinkHistory(req, res) {
             .send("An error occurred while fetching link history");
     }
 }
+export const deleteShortenedUrl = async (req, res) => {
+    try {
+        const userid = req.user.id;
+        console.log(userid);
+        const { id } = req.params;
+        const result = await shortUrl.findByIdAndDelete(id);
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "Shortened URL not found",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Shortened URL deleted successfully",
+        });
+    }
+    catch (error) {
+        console.error("Error deleting shortened URL:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while deleting the shortened URL",
+        });
+    }
+};
 //# sourceMappingURL=shorturl.controller.js.map

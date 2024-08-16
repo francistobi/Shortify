@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { renderHomePage, renderLoginPage, getRegPage, } from "../controllers/pageControler.js";
+import { renderHomePage, renderLoginPage, getRegPage, LinkhistoryPage, } from "../controllers/pageControler.js";
 const pagerouter = Router();
 pagerouter.get("/", renderHomePage);
-pagerouter.get("/login", renderLoginPage);
-pagerouter.get("/signup", getRegPage);
+pagerouter.get("/loginP", renderLoginPage);
+pagerouter.get("/signupP", getRegPage);
+pagerouter.get("/linkhistoryP", LinkhistoryPage);
 export default pagerouter;
 //# sourceMappingURL=pageroutes.js.map

@@ -58,7 +58,7 @@ export async function handleRedirect(req: Request, res: Response){
 
 
 export async function getAnalytics(req: Request, res: Response){
-  const id = req.params.id;
+  const id = req.params.id; 
   const allAnalytics = await analytics.find({ shortUrl : id}).lean();
   if (!allAnalytics) {
     res.status(404).send("No analytics found");
@@ -87,3 +87,32 @@ export async function getLinkHistory(req: Request, res: Response) {
       .send("An error occurred while fetching link history");
   }
 }
+
+export const deleteShortenedUrl = async (req: Request, res: Response) => {
+  try {
+    const userid = req.user.id
+    console.log(userid)
+    const { id } = req.params;
+
+    const result = await shortUrl.findByIdAndDelete(id);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Shortened URL not found",
+      });
+    }
+
+
+    return res.status(200).json({
+      success: true,
+      message: "Shortened URL deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting shortened URL:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the shortened URL",
+    });
+  }
+};

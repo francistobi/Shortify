@@ -1,22 +1,32 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-dotenv.config();
+import { fileURLToPath } from "url";
+import path from "path";
+// Load environment variables
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+console.log(__dirname);
+const JWT_SECRET = process.env.JWT_SECRET;
 export const authenticate = (req, res, next) => {
-    const token = req.cookies.jwt;
-    if (token) {
-        jwt.verify(token, "57f87fyivb9u97t8hj", (err, data) => {
-            if (err) {
-                res.redirect("/api/v1/auth/login");
-            }
-            else {
-                req.user = data;
-                next();
-            }
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({
+            success: false,
+            message: "Access denied. No token provided.",
         });
     }
-    else {
-        console.log("There was no token");
-        res.redirect("/api/v1/auth/login");
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        next();
+    }
+    catch (err) {
+        return res.status(403).json({
+            success: false,
+            message: "Invalid token. Authentication failed.",
+        });
     }
 };
 //# sourceMappingURL=authenticate.js.map

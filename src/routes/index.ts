@@ -4,6 +4,7 @@ import {
   handleRedirect,
   getAnalytics,
   getLinkHistory,
+  deleteShortenedUrl,
 } from "../controllers/shorturl.controller.js";
 import{generateQRCode} from "../controllers/qrcode.controller.js"
 import validateResource from "../middleware/validate.js";
@@ -22,5 +23,6 @@ router.get("/:shortId",handleRedirect);
 router.get("/analytics/:id", getAnalytics);
 router.get("/qr/:shortId", generateQRCode);
 router.get("/mylinks/:id", authenticate, getLinkHistory);
+router.delete("/delete/:id",authenticate, deleteShortenedUrl);
 
 export default router;

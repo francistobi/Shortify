@@ -4,13 +4,15 @@ import dotenv from "dotenv";
 import path from "path";
 import { Request, Response, NextFunction } from "express";
 import User from "../models/user.model.js";
+
 import { fileURLToPath } from "url";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, "../env") });
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET 
 const age = 60 * 60;
 
 interface JwtPayload {
@@ -37,11 +39,10 @@ const signup = async (req: Request, res: Response) => {
     console.log("User created successfully:", user);
     const token = createJwt(user.id, email);
     res.cookie("jwt", token, { httpOnly: true });
-    res.status(201).json({ user});
-    res.redirect("/api/v1/auth/login");
+    res.status(201).json({user});
   } catch (err) {
     console.log(err);
-    res.status(400).redirect("/api/v1/auth/signup");
+    res.status(400).json({err})
   }
 };
 
@@ -52,17 +53,29 @@ const login = async (req: Request, res: Response) => {
     if (user) {
       if (await bcrypt.compare(password, user.password)) {
         const token = createJwt(user.id, email);
-        res.cookie("jwt", token, { httpOnly: true });
-        res.json(token)
+         return res.status(200).json({
+           success: true,
+           message: "Login successful",
+           token,
+         });
       } else {
-        res.redirect("/api/v1/auth/login");
+        return res.status(401).json({
+          success: false,
+          message: "Invalid password",
+        });
       }
     } else {
-      res.redirect("/api/v1/auth/login");
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
   } catch (err) {
-    console.log(err);
-    res.status(400).redirect("/api/v1/auth/login");
+    console.error("Error during login:", err);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred during login. Please try again later.",
+    });
   }
 };
 
