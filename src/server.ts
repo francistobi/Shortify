@@ -30,6 +30,13 @@ app.use(limiter);
 app.use("/api/v1", router);
 app.use("/api/v1/auth", authrouter);
 
+
+app.get("/", (req:Request, res:Response) =>{
+  res.json({
+    message: "welcome to shortify"
+  })
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   connectDB();
